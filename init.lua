@@ -20,6 +20,7 @@ opt.smartcase = true          -- 대문자 섞이면 대소문자 구분
 opt.termguicolors = true      -- 24bit 트루컬러 사용
 opt.scrolloff = 8             -- 스크롤 시 위아래 여백 확보
 opt.updatetime = 50           -- 반응 속도 (기본 4000ms -> 50ms)
+opt.guicursor = "a:ver25"     -- 커서 스타일 (일반모드: 세로선, 입력모드: 세로선)
 
 -- Swap/Undo 설정
 opt.swapfile = false
