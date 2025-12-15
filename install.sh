@@ -9,6 +9,12 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}=== Starting Neovim v0.11+ Environment Setup ===${NC}"
 
+# 0. Check if we need sudo
+SUDO=""
+if [ "$(id -u)" -ne 0 ]; then
+    SUDO="sudo"
+fi
+
 # 1. Dependency Check
 # Neovim 플러그인 구동에 필요한 필수 패키지들 (GCC는 Treesitter 컴파일용, Ripgrep은 검색용)
 REQUIRED_PACKAGES="git curl wget unzip gcc make ripgrep fd-find"
@@ -18,9 +24,20 @@ if ! command -v clangd &> /dev/null; then
     REQUIRED_PACKAGES+=" clangd"
 fi
 
-SUDO=""
-if [ "$(id -u)" -ne 0 ]; then
-    SUDO="sudo"
+# Node.js 확인 (Copilot 구동에 필수 - v22 이상 필요)
+NODE_VERSION=""
+if command -v node &> /dev/null; then
+    NODE_VERSION=$(node -v | grep -oP 'v\K[0-9]+')
+fi
+
+if [ -z "$NODE_VERSION" ] || [ "$NODE_VERSION" -lt 22 ]; then
+    echo -e "${YELLOW}Node.js v22+ required for Copilot. Installing Node.js v22.x...${NC}"
+    if [ -n "$SUDO" ]; then
+        curl -fsSL https://deb.nodesource.com/setup_22.x | $SUDO -E bash -
+    else
+        curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+    fi
+    REQUIRED_PACKAGES+=" nodejs"
 fi
 
 echo -e "${YELLOW}Checking dependencies...${NC}"
@@ -74,11 +91,9 @@ if [ -d "$CONFIG_DIR" ] && [ ! -L "$CONFIG_DIR" ]; then
     mv "$CONFIG_DIR" "${CONFIG_DIR}.backup_$(date +%Y%m%d_%H%M%S)"
 fi
 
-if [ ! -L "$CONFIG_DIR" ]; then
-    echo "Linking configuration..."
-    mkdir -p "$HOME/.config"
-    ln -sf "$SCRIPT_DIR" "$CONFIG_DIR"
-fi
+echo "Linking configuration..."
+mkdir -p "$HOME/.config"
+ln -sf "$SCRIPT_DIR" "$CONFIG_DIR"
 
 # 5. Setup Aliases (vi, vim -> nvim)
 echo -e "${BLUE}Configuring shell aliases (vi/vim -> nvim)...${NC}"

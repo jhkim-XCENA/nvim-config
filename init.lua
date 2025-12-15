@@ -22,6 +22,10 @@ opt.scrolloff = 8             -- 스크롤 시 위아래 여백 확보
 opt.updatetime = 50           -- 반응 속도 (기본 4000ms -> 50ms)
 opt.guicursor = "a:ver25"     -- 커서 스타일 (일반모드: 세로선, 입력모드: 세로선)
 
+-- for korean letters in docker
+opt.encoding = "utf-8"
+opt.fileencoding = "utf-8"
+
 -- Swap/Undo 설정
 opt.swapfile = false
 opt.backup = false
@@ -45,7 +49,9 @@ vim.opt.rtp:prepend(lazypath)
 -- 3. Load Plugins & Configs
 require("lazy").setup({
     spec = {
-        -- 플러그인 명세를 별도 파일로 분리하여 로드
+        -- 플러그인 명세를 plugins/ 폴더에서 로드
+        -- plugins/init.lua - 기본 플러그인
+        -- plugins/copilot.lua - GitHub Copilot (고립된 모듈)
         { import = "plugins" },
     },
     checker = { enabled = true }, -- 플러그인 업데이트 자동 확인
