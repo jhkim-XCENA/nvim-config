@@ -100,7 +100,7 @@ add_aliases() {
             echo "alias view='nvim -R'" >> "$RC_FILE"
             echo "# -------------------------------------------" >> "$RC_FILE"
             echo -e "${GREEN}Added aliases to $SHELL_NAME config ($RC_FILE)${NC}"
-        end
+        fi
     fi
 }
 

@@ -24,9 +24,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
--- 2. 서버 설정 (Native v0.11 Style)
--- 주의: require('lspconfig').setup 방식은 폐기되었습니다.
--- 대신 vim.lsp.config 테이블을 수정하고 vim.lsp.enable을 호출합니다.
+-- 2. 서버 설정 (Neovim 0.11+ Native API)
+-- nvim-cmp와 연동을 위한 capabilities 설정
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- [C/C++] clangd
 vim.lsp.config.clangd = {
@@ -35,12 +35,17 @@ vim.lsp.config.clangd = {
         "--background-index",
         "--clang-tidy",
         "--header-insertion=iwyu",
+        "--completion-style=detailed",
+        "--function-arg-placeholders",
     },
+    capabilities = capabilities,
+    root_markers = { '.git', 'compile_commands.json' },
 }
-vim.lsp.enable("clangd") -- 서버 활성화
+vim.lsp.enable('clangd')
 
 -- [Rust] rust_analyzer
 vim.lsp.config.rust_analyzer = {
+    capabilities = capabilities,
     settings = {
         ["rust-analyzer"] = {
             checkOnSave = {
@@ -49,13 +54,15 @@ vim.lsp.config.rust_analyzer = {
         },
     },
 }
-vim.lsp.enable("rust_analyzer")
+vim.lsp.enable('rust_analyzer')
 
 -- [Python] pyright (필요시 주석 해제)
--- vim.lsp.enable("pyright")
+-- vim.lsp.config.pyright = { capabilities = capabilities }
+-- vim.lsp.enable('pyright')
 
 -- [Lua] lua_ls (Neovim 설정용)
 vim.lsp.config.lua_ls = {
+    capabilities = capabilities,
     settings = {
         Lua = {
             runtime = { version = 'LuaJIT' },
@@ -68,4 +75,4 @@ vim.lsp.config.lua_ls = {
         },
     },
 }
-vim.lsp.enable("lua_ls")
+vim.lsp.enable('lua_ls')

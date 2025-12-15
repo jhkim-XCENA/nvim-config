@@ -45,15 +45,28 @@ return {
         },
     },
 
-    -- 5. LSP Configuration
+    -- 5. LSP Support (nvim 0.11+ uses native vim.lsp.config)
     {
-        "neovim/nvim-lspconfig",
-        dependencies = { "hrsh7th/cmp-nvim-lsp" },
+        "hrsh7th/cmp-nvim-lsp",
         config = function()
+            -- LSP 설정은 lua/lsp/lspconfig.lua에서 로드됨
             require("lsp.lspconfig")
         end,
     },
-    -- 6. 단어 강조 (vim-illuminate)
+    -- 6. Fuzzy Finder (Telescope)
+    {
+        "nvim-telescope/telescope.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            local builtin = require('telescope.builtin')
+            vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find Files' })
+            vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live Grep' })
+            vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Find Buffers' })
+            vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Help Tags' })
+        end,
+    },
+
+    -- 7. 단어 강조 (vim-illuminate)
     {
         "RRethy/vim-illuminate",
         event = { "BufReadPost", "InsertEnter" }, -- 파일을 읽거나 입력 모드 들어갈 때 로드
@@ -77,7 +90,7 @@ return {
             -- vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { link = "Visual" })
         end,
     },
-    -- 7. 자동완성 엔진 (nvim-cmp)
+    -- 8. 자동완성 엔진 (nvim-cmp)
     {
         "hrsh7th/nvim-cmp",
         event = "InsertEnter", -- 입력 모드 진입 시 로드
