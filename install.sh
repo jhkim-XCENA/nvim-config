@@ -40,6 +40,8 @@ if [ -z "$NODE_VERSION" ] || [ "$NODE_VERSION" -lt 22 ]; then
     REQUIRED_PACKAGES+=" nodejs"
 fi
 
+npm install -g bash-language-server
+
 echo -e "${YELLOW}Checking dependencies...${NC}"
 if $SUDO apt update && $SUDO apt install -y $REQUIRED_PACKAGES; then
     echo -e "${GREEN}Dependencies installed successfully!${NC}"

@@ -11,6 +11,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         -- 키 매핑
         keymap('n', 'gD', vim.lsp.buf.declaration, opts)     -- 선언으로 이동
         keymap('n', 'gd', vim.lsp.buf.definition, opts)      -- 정의로 이동
+        keymap('n', 'gl', vim.diagnostic.open_float, opts)   -- 에러 메시지 창 띄우기
         keymap('n', 'K', vim.lsp.buf.hover, opts)            -- 설명 보기
         keymap('n', 'gi', vim.lsp.buf.implementation, opts)  -- 구현체 보기
         keymap('n', '<space>rn', vim.lsp.buf.rename, opts)   -- 이름 변경
@@ -40,6 +41,7 @@ vim.lsp.config.clangd = {
     },
     capabilities = capabilities,
     root_markers = { '.git', 'compile_commands.json' },
+    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto', 'h', 'hpp', 'hh', 'hxx' },
 }
 vim.lsp.enable('clangd')
 
@@ -76,3 +78,23 @@ vim.lsp.config.lua_ls = {
     },
 }
 vim.lsp.enable('lua_ls')
+
+vim.diagnostic.config({
+  signs = false,  -- 왼쪽 거터(Gutter)의 E, W 기호를 숨김
+})
+
+-- 3. 진단(Diagnostic) UI 설정
+vim.diagnostic.config({
+  signs = false,       -- 왼쪽 아이콘(E, W)은 끄고 (아까 요청하신 부분)
+  virtual_text = true, -- [중요] 코드 옆에 에러 메시지 텍스트는 켜기
+  underline = true,    -- 밑줄 켜기
+  update_in_insert = false, -- 입력 도중에는 갱신하지 않음 (선택 사항)
+})
+
+-- [Bash] bashls (Shell Script)
+vim.lsp.config.bashls = {
+    capabilities = capabilities,
+    cmd = { "bash-language-server", "start" },
+    filetypes = { "sh", "bash" }, -- sh, bash 파일에서만 동작
+}
+vim.lsp.enable('bashls')
